@@ -29,10 +29,8 @@ class App extends Component {
         ]
     };
 
-    prevTitleId = 4;
-
-
     handleAddTitle = (name) => {
+        const nextId = Math.max(...this.state.titles.map(({ id }) => id)) + 1;
         this.setState( prevState => {
             return {
                 titles: [
@@ -40,25 +38,33 @@ class App extends Component {
                     {
                         name,
                         score: 0,
-                        id: this.prevTitleId += 1
+                        id: nextId
                     }
                 ]
             };
         });
     }
 
-    handleScoreChange = (index, e) => {
-        this.setState( prevState => ({ 
-            score: prevState.titles[index].score += e
-        }))
+    handleUpdateScore = (id, score) => {
+        this.setState({
+            titles: this.state.titles.reduce(
+                (acc, title) => {
+                    if(title.id === id){
+                        title.score = score;
+                    }
+                    acc.push(title);
+                    return acc;
+                },
+                []
+            )
+        })
     }
 
     handleSubmit = (e) => {
         e.preventDefault();
-        this.props.score(this.state.score);
-        console.log(this.props.score(this.state.score))
-        // this.setState({ score: ''})
+        this.state.submitScore(this.state.score)
     }
+
     render(){
         return (
             <div className="scoreboard">
@@ -72,10 +78,9 @@ class App extends Component {
                         name={title.name}
                         id={title.id}
                         score={title.score}
-                        key={title.id.toString()}
+                        key={title.id}
                         index={index}
-                        changeScore={this.handleScoreChange}
-                        submitScore={this.handleSubmit}
+                        submitScore={this.handleUpdateScore}
                     />
                 )}
 

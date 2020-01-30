@@ -1,16 +1,31 @@
-import React from 'react';
+import React, { Component } from 'react';
 
-const Score = (props) => {
+class Score extends Component {
+  
+    state = {
+        value: ''
+    }
 
-    let index= props.index;
+    handleSubmit = e => {
+        e.preventDefault();
+        this.props.submitScore(this.props.id, e.target.score.value);
+        this.setState({ value: ''});
+    }
 
+    handleChange = e => {
+        this.setState({ value: e.target.value })
+        
+    }
+
+render(){
     return (
         <div className="counter">
-            <form className="score-form" onSubmit={e => props.submitScore(e.target.score)}>
+            <form className="score-form" onSubmit={this.handleSubmit}>
                 <input 
-                    type="text" 
-                    // value={props.score}
-                    onChange={e => props.changeScore(index, e.target.score)}
+                    value={this.state.value}
+                    type="text"
+                    name="score" 
+                    onChange={this.handleChange}
                     placeholder="Enter Score"  
                 />
 
@@ -22,6 +37,6 @@ const Score = (props) => {
         </div>
     )
     }
-
+}
 
 export default Score;
